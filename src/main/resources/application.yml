@@ -1,0 +1,28 @@
+server:
+  port: ${PORT:8080}
+  # Render/Railway sit behind a proxy. This makes request.getRemoteAddr() return the
+  # visitor's real IP (from X-Forwarded-For), so the rate limit applies per visitor
+  # instead of to everyone at once.
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: knowit-ai
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+knowit:
+  upload:
+    max-bytes: 5242880
+  ai:
+    # No default: the key must come from the GEMINI_API_KEY environment variable.
+    api-key: ${GEMINI_API_KEY}
+    model: ${GEMINI_MODEL:gemini-3.1-flash-lite}
+    base-url: https://generativelanguage.googleapis.com
+    timeout-seconds: 30
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  rate-limit:
+    requests-per-minute: 10
